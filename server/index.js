@@ -47,7 +47,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Initialize database
-initDatabase();
+initDatabase().catch(err => {
+  console.error('❌ Database initialization failed:', err);
+  process.exit(1);
+});
 
 // Make bot available to webhook routes
 app.locals.bot = bot;
