@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Edit, Trash2, Calendar, Tag, Mic, Edit3, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Calendar, Mic, Edit3, Image as ImageIcon } from 'lucide-react';
 import moment from 'moment';
 import 'moment/locale/ru';
 import { useJournal } from '../contexts/JournalContext';
@@ -20,7 +20,7 @@ const EntryDetail = () => {
 
   useEffect(() => {
     loadEntry();
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadEntry = async () => {
     setIsLoading(true);

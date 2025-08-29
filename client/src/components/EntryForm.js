@@ -31,7 +31,7 @@ const EntryForm = () => {
       loadEntry();
       setIsEditMode(true);
     }
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadEntry = async () => {
     try {

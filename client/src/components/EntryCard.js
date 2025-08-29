@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Tag, Mic, Edit } from 'lucide-react';
+import { Calendar, Mic, Edit } from 'lucide-react';
 import moment from 'moment';
 import 'moment/locale/ru';
 

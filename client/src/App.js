@@ -21,7 +21,6 @@ function App() {
           window.Telegram.WebApp.expand();
           
           // Get user data from Telegram
-          const initData = window.Telegram.WebApp.initData;
           const userData = window.Telegram.WebApp.initDataUnsafe?.user;
           
           if (userData) {

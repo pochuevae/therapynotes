@@ -22,7 +22,7 @@ const Home = () => {
       fetchEntries();
       fetchTags();
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = () => {
     const filters = {};
