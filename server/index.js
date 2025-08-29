@@ -55,11 +55,21 @@ initDatabase().catch(err => {
 // Make bot available to webhook routes
 app.locals.bot = bot;
 
+// Root health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    message: 'Therapy Journal API is running',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // Routes
 app.use('/api', healthRoutes);
 app.use('/api/journal', journalRoutes);
 app.use('/api/bot', botRoutes);
-app.use('/', webhookRoutes); // Webhook route at root level
+app.use('/webhook', webhookRoutes); // Move webhook to /webhook path
 
 // Serve static files from React build
 app.use(express.static(path.join(__dirname, '../client/build')));
@@ -99,8 +109,19 @@ ${process.env.MINI_APP_URL || 'https://your-domain.com'}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('❌ Server error:', err.stack);
   res.status(500).json({ error: 'Что-то пошло не так!' });
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
 });
 
 // Catch all handler for React app
@@ -111,6 +132,8 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущен на порту ${PORT}`);
   console.log(`📱 Mini App доступен по адресу: ${process.env.MINI_APP_URL || 'http://localhost:3000'}`);
+  console.log(`🔗 Health check: http://localhost:${PORT}/`);
+  console.log(`🔗 API health: http://localhost:${PORT}/api/health`);
   
   // Set webhook in production
   if (isProduction && process.env.WEBHOOK_URL) {

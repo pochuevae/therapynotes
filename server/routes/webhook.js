@@ -4,7 +4,7 @@ const { processVoiceMessage } = require('../services/voiceProcessor');
 const router = express.Router();
 
 // Webhook endpoint for Telegram bot
-router.post('/webhook', express.json(), async (req, res) => {
+router.post('/', express.json(), async (req, res) => {
   try {
     const { message } = req.body;
     
