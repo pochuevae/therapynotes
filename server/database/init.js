@@ -93,41 +93,43 @@ async function initDatabase() {
   }
 }
 
-// Database helper functions
-function runQuery(sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function(err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ id: this.lastID, changes: this.changes });
-      }
+// Database helper functions for SQLite (development only)
+if (!isProduction) {
+  function runQuery(sql, params = []) {
+    return new Promise((resolve, reject) => {
+      db.run(sql, params, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ id: this.lastID, changes: this.changes });
+        }
+      });
     });
-  });
-}
+  }
 
-function getQuery(sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(row);
-      }
+  function getQuery(sql, params = []) {
+    return new Promise((resolve, reject) => {
+      db.get(sql, params, (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      });
     });
-  });
-}
+  }
 
-function allQuery(sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(rows);
-      }
+  function allQuery(sql, params = []) {
+    return new Promise((resolve, reject) => {
+      db.all(sql, params, (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
     });
-  });
+  }
 }
 
 module.exports = {
