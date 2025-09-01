@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // Simple test endpoint
 app.get('/', (req, res) => {
@@ -18,8 +18,11 @@ app.get('/health', (req, res) => {
 });
 
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Test server running on port ${PORT}`);
-  console.log(`Server address: ${server.address().address}:${server.address().port}`);
+  console.log(`🚀 Test server running on port ${PORT}`);
+  console.log(`📍 Server address: ${server.address().address}:${server.address().port}`);
+  console.log(`🌐 Server family: ${server.address().family}`);
+  console.log(`🔗 Health check: http://0.0.0.0:${PORT}/health`);
+  console.log(`🔗 Root endpoint: http://0.0.0.0:${PORT}/`);
 });
 
 server.on('error', (err) => {
