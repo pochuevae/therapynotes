@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
+
+console.log('🔧 Environment variables:');
+console.log('PORT:', process.env.PORT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('Using PORT:', PORT);
 
 // Simple test endpoint
 app.get('/', (req, res) => {
@@ -14,7 +19,19 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
+  console.log('Health check request received from:', req.ip);
   res.json({ status: 'healthy' });
+});
+
+// Catch all for debugging
+app.all('*', (req, res) => {
+  console.log(`🔍 ${req.method} ${req.path} from ${req.ip}`);
+  res.json({ 
+    method: req.method, 
+    path: req.path, 
+    ip: req.ip,
+    message: 'Catch-all handler'
+  });
 });
 
 const server = app.listen(PORT, '0.0.0.0', () => {
