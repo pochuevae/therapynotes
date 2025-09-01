@@ -39,15 +39,20 @@ const limiter = rateLimit({
 });
 
 // Middleware
+console.log('🔧 Setting up middleware...');
 app.use(helmet());
 app.use(cors());
 app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+console.log('✅ Middleware setup completed');
 
 // Initialize database
-initDatabase().catch(err => {
+console.log('🔄 Starting database initialization...');
+initDatabase().then(() => {
+  console.log('✅ Database initialization completed successfully');
+}).catch(err => {
   console.error('❌ Database initialization failed:', err);
   process.exit(1);
 });
@@ -66,10 +71,12 @@ app.get('/', (req, res) => {
 });
 
 // Routes
+console.log('🛣️ Setting up routes...');
 app.use('/api', healthRoutes);
 app.use('/api/journal', journalRoutes);
 app.use('/api/bot', botRoutes);
 app.use('/webhook', webhookRoutes); // Move webhook to /webhook path
+console.log('✅ Routes setup completed');
 
 // Serve static files from React build
 app.use(express.static(path.join(__dirname, '../client/build')));
