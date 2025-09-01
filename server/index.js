@@ -136,11 +136,11 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Сервер запущен на порту ${PORT}`);
   console.log(`📱 Mini App доступен по адресу: ${process.env.MINI_APP_URL || 'http://localhost:3000'}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/`);
-  console.log(`🔗 API health: http://localhost:${PORT}/api/health`);
+  console.log(`🔗 Health check: http://0.0.0.0:${PORT}/`);
+  console.log(`🔗 API health: http://0.0.0.0:${PORT}/api/health`);
   
   // Set webhook in production
   if (isProduction && process.env.WEBHOOK_URL) {
@@ -150,6 +150,33 @@ app.listen(PORT, () => {
       console.error('❌ Ошибка установки webhook:', err);
     });
   }
+});
+
+// Handle server errors
+server.on('error', (err) => {
+  console.error('❌ Server error:', err);
+  process.exit(1);
+});
+
+server.on('listening', () => {
+  console.log('✅ Server is listening and ready to accept connections');
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('🔄 SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('🔄 SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
 });
 
 module.exports = { app, bot };
