@@ -46,6 +46,13 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`📥 ${req.method} ${req.path} from ${req.ip}`);
+  next();
+});
+
 console.log('✅ Middleware setup completed');
 
 // Initialize database
@@ -62,11 +69,14 @@ app.locals.bot = bot;
 
 // Root health check endpoint
 app.get('/', (req, res) => {
+  console.log('🔍 Health check request received from:', req.ip);
   res.status(200).json({ 
     status: 'OK', 
     message: 'Therapy Journal API is running',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    port: PORT,
+    host: '0.0.0.0'
   });
 });
 
@@ -159,7 +169,10 @@ server.on('error', (err) => {
 });
 
 server.on('listening', () => {
+  const address = server.address();
   console.log('✅ Server is listening and ready to accept connections');
+  console.log(`📍 Server address: ${address.address}:${address.port}`);
+  console.log(`🌐 Server family: ${address.family}`);
 });
 
 // Graceful shutdown
