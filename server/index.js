@@ -16,7 +16,7 @@ const { initDatabase } = require('./database/init');
 const { processVoiceMessage } = require('./services/voiceProcessor');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Create necessary directories
 const dirs = ['./data', './uploads', './uploads/images'];
@@ -69,7 +69,9 @@ app.locals.bot = bot;
 
 // Root health check endpoint
 app.get('/', (req, res) => {
-  console.log('🔍 Health check request received from:', req.ip);
+  console.log('🔍 Root request received from:', req.ip);
+  console.log('🔍 Request method:', req.method);
+  console.log('🔍 Request path:', req.path);
   res.status(200).json({ 
     status: 'OK', 
     message: 'Therapy Journal API is running',
